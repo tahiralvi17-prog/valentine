@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Queen ✨</title>
+    <title>Hey princess, there's a message for you... ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: radial-gradient(circle at center, #4b2c5e, #8e44ad);
+            background: #1a0b2e; /* Darker start for suspense */
             overflow: hidden;
             color: white;
             font-family: 'Arial', sans-serif;
+            transition: background 2s ease;
         }
+
+        /* The glowing lantern button at the start */
+        #gatekeeper {
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        #gatekeeper:hover { transform: scale(1.1); filter: drop-shadow(0 0 30px #ffd700); }
 
         .sun-bg {
             position: fixed;
@@ -20,46 +29,32 @@
             width: 80vh; height: 80vh;
             background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sun_symbol_of_the_Kingdom_of_Corona.svg/1024px-Sun_symbol_of_the_Kingdom_of_Corona.svg.png') no-repeat center;
             background-size: contain;
-            opacity: 0.15;
+            opacity: 0;
             z-index: 0;
-            animation: rotate 60s linear infinite;
+            transition: opacity 3s ease;
         }
-
-        @keyframes rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
 
         .card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             border: 2px solid rgba(255, 215, 0, 0.4);
             z-index: 50;
-        }
-
-        #yesBtn {
-            transition: transform 0.1s ease-out;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            display: none; /* Hidden at start */
         }
 
         .love-text {
-            position: fixed;
-            z-index: 100;
-            font-weight: bold;
-            pointer-events: none;
+            position: fixed; z-index: 100; font-weight: bold; pointer-events: none;
             animation: popOut 1s ease-out forwards;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
         }
 
         @keyframes popOut {
-            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: scale(2.5) rotate(10deg); opacity: 0; }
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(2.5); opacity: 0; }
         }
 
         .lantern {
-            position: fixed;
-            bottom: -10%;
-            font-size: 35px;
-            filter: drop-shadow(0 0 15px #ffd700);
-            z-index: 1;
+            position: fixed; bottom: -10%; font-size: 35px;
+            filter: drop-shadow(0 0 15px #ffd700); z-index: 1;
             animation: rise linear forwards;
         }
 
@@ -68,41 +63,76 @@
 </head>
 <body class="h-screen flex items-center justify-center">
 
-    <div class="sun-bg"></div>
+    <div class="sun-bg" id="sunBg"></div>
+
+    <div id="suspenseLayer" class="text-center z-[100]">
+        <div id="gatekeeper" class="text-8xl mb-4">🏮</div>
+        <p class="text-yellow-200 italic animate-pulse">Someone (your gudda) sent you a secret message...<br>Click the lantern to open it.</p>
+    </div>
 
     <div id="card" class="card p-10 rounded-3xl shadow-2xl text-center max-w-lg w-full mx-4 relative">
         <div id="media" class="mb-4">
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" alt="Pascal" class="w-24 mx-auto">
         </div>
 
-        <h1 class="text-3xl font-bold text-yellow-300 italic mb-2 leading-tight">
-            Hey pretty Rapunzel, Will you be the Valentine of your wittul guggu? 🥺
-        </h1>
-        <p class="text-yellow-100 text-lg mb-8 italic opacity-90">Yes, pweeeese... I'm waiting! ✨</p>
+        <h1 id="typedQuestion" class="text-3xl font-bold text-yellow-300 italic mb-2 leading-tight"></h1>
+        <p id="pweese" class="text-yellow-100 text-lg mb-8 italic opacity-0 transition-opacity duration-1000">Yes, pweeeese... I'm waiting! ✨</p>
 
         <div class="flex justify-center items-center gap-6 relative min-h-[250px]">
-            <button id="yesBtn" class="bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-extrabold py-4 px-12 rounded-full z-50 whitespace-nowrap text-xl">
+            <button id="yesBtn" class="bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-extrabold py-4 px-12 rounded-full z-50 opacity-0 transition-opacity duration-500">
                 YES!
             </button>
-            <button id="noBtn" class="bg-white/20 text-white font-bold py-2 px-8 rounded-full absolute transition-all duration-75 z-50">
+            <button id="noBtn" class="bg-white/20 text-white font-bold py-2 px-8 rounded-full absolute transition-all duration-75 z-50 opacity-0">
                 No
             </button>
         </div>
     </div>
 
     <script>
-        const noBtn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
+        const gatekeeper = document.getElementById('gatekeeper');
+        const suspenseLayer = document.getElementById('suspenseLayer');
         const card = document.getElementById('card');
+        const sunBg = document.getElementById('sunBg');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const pweese = document.getElementById('pweese');
 
-        // 1. Growing YES Button (He wants a YES!)
+        // Initial Click for Suspense
+        gatekeeper.addEventListener('click', () => {
+            suspenseLayer.style.display = 'none';
+            card.style.display = 'block';
+            sunBg.style.opacity = '0.15';
+            document.body.style.background = 'radial-gradient(circle at center, #4b2c5e, #8e44ad)';
+            typeWriter();
+        });
+
+        // Typing Effect
+        const text = "Will you be the Valentine of your wittul guggu? 🥺";
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typedQuestion").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 70);
+            } else {
+                // Show everything else once typing is done
+                pweese.style.opacity = '1';
+                yesBtn.style.opacity = '1';
+                noBtn.style.opacity = '1';
+                startGrowing();
+            }
+        }
+
+        // Growing YES Button
         let currentScale = 1;
-        setInterval(() => {
-            currentScale += 0.005; // Smooth slow growth
-            yesBtn.style.transform = `scale(${currentScale})`;
-        }, 100);
+        function startGrowing() {
+            setInterval(() => {
+                currentScale += 0.005;
+                yesBtn.style.transform = `scale(${currentScale})`;
+            }, 100);
+        }
 
-        // 2. Runaway NO Button
+        // Runaway NO Button
         const moveButton = () => {
             const maxX = window.innerWidth - noBtn.offsetWidth;
             const maxY = window.innerHeight - noBtn.offsetHeight;
@@ -110,43 +140,30 @@
             noBtn.style.top = Math.random() * maxY + 'px';
             noBtn.style.position = 'fixed';
         };
-
         noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
 
-        // 3. The Big Celebration
+        // Success Celebration
         yesBtn.addEventListener('click', () => {
-            card.innerHTML = `
-                <h1 class="text-5xl font-bold text-yellow-300 drop-shadow-lg">BEST DAY EVER! ☀️</h1>
-                <p class="text-2xl mt-6 italic font-semibold">Your wittul guggu loves you so much!!</p>
-                <div class="mt-4 text-6xl">👑🏮💖</div>
-            `;
-            setInterval(createLoveText, 60); 
-            setInterval(createLantern, 350);
+            card.innerHTML = `<h1 class="text-5xl font-bold text-yellow-300">BEST DAY EVER! ☀️</h1><p class="text-2xl mt-6 italic">Wittul guggu loves you!!</p>`;
+            setInterval(() => {
+                const love = document.createElement('div');
+                love.innerHTML = "I LOVE YOU";
+                love.className = 'love-text';
+                love.style.left = Math.random() * 100 + 'vw';
+                love.style.top = Math.random() * 100 + 'vh';
+                love.style.color = '#FFD700';
+                document.body.appendChild(love);
+                setTimeout(() => love.remove(), 1000);
+            }, 60);
+            setInterval(() => {
+                const lantern = document.createElement('div');
+                lantern.innerHTML = '🏮';
+                lantern.className = 'lantern';
+                lantern.style.left = Math.random() * 100 + 'vw';
+                document.body.appendChild(lantern);
+                setTimeout(() => lantern.remove(), 7000);
+            }, 350);
         });
-
-        function createLoveText() {
-            const love = document.createElement('div');
-            love.innerHTML = "I LOVE YOU";
-            love.className = 'love-text';
-            love.style.left = Math.random() * 100 + 'vw';
-            love.style.top = Math.random() * 100 + 'vh';
-            const colors = ['#FFD700', '#FF69B4', '#FFFFFF', '#BA55D3'];
-            love.style.color = colors[Math.floor(Math.random() * colors.length)];
-            love.style.fontSize = (Math.random() * 50 + 20) + 'px';
-            document.body.appendChild(love);
-            setTimeout(() => love.remove(), 1000);
-        }
-
-        function createLantern() {
-            const lantern = document.createElement('div');
-            lantern.innerHTML = '🏮';
-            lantern.className = 'lantern';
-            lantern.style.left = Math.random() * 100 + 'vw';
-            lantern.style.animationDuration = (Math.random() * 4 + 4) + 's';
-            document.body.appendChild(lantern);
-            setTimeout(() => lantern.remove(), 7500);
-        }
     </script>
 </body>
 </html>
