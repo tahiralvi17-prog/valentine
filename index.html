@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Secret... ✨</title>
+    <title>A Kingdom Secret... ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cinzel:wght@400;700&display=swap');
@@ -23,21 +23,23 @@
         .font-royal { font-family: 'Cinzel', serif; }
         .font-magic { font-family: 'Dancing Script', cursive; }
 
+        /* The Corona Sun - Created with pure CSS so it never fails to load */
         .sun-bg {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 75vh; height: 75vh;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sun_symbol_of_the_Kingdom_of_Corona.svg/1024px-Sun_symbol_of_the_Kingdom_of_Corona.svg.png') no-repeat center;
-            background-size: contain;
+            width: 60vh; height: 60vh;
+            background: radial-gradient(circle, #ffd700 20%, transparent 70%);
+            border-radius: 50%;
             opacity: 0;
             z-index: 0;
             pointer-events: none;
             transition: opacity 2s ease;
+            box-shadow: 0 0 100px #ffd700;
         }
 
         .glass-card {
-            background: rgba(46, 42, 54, 0.85);
+            background: rgba(46, 42, 54, 0.9);
             backdrop-filter: blur(15px);
             border: 2px solid #ffd700;
             border-radius: 40px;
@@ -55,10 +57,9 @@
             color: #2e2a36;
             font-weight: 900;
             border-radius: 50px;
-            padding: 1.2rem 3.5rem;
+            padding: 1rem 3rem;
             font-size: 1.8rem;
-            z-index: 100;
-            transition: transform 0.05s linear; /* ULTRA FAST GROWTH */
+            transition: transform 0.05s linear;
         }
 
         .love-bomb {
@@ -75,12 +76,6 @@
             50% { opacity: 1; }
             100% { transform: scale(4) rotate(20deg); opacity: 0; }
         }
-
-        #mainLantern {
-            width: 160px;
-            cursor: pointer;
-            filter: drop-shadow(0 0 30px #ffd700);
-        }
     </style>
 </head>
 <body>
@@ -92,9 +87,103 @@
     </audio>
 
     <div id="step1" class="text-center z-50">
-        <img id="mainLantern" src="https://i.postimg.cc/9F2Yp3kP/lantern-image.png" class="mx-auto animate-bounce mb-8">
-        <p class="font-royal text-yellow-200 tracking-[0.5em] text-lg animate-pulse">TOUCH THE LIGHT</p>
+        <div id="mainLantern" class="text-9xl cursor-pointer animate-bounce mb-8">🏮</div>
+        <p class="font-royal text-yellow-200 tracking-[0.5em] text-lg animate-pulse uppercase">Touch the Light</p>
     </div>
 
     <div id="step2" class="glass-card">
-        <img src="
+        <div class="text-6xl mb-4 animate-pulse">🦎</div>
+        <div class="min-h-[120px] flex items-center justify-center">
+            <h2 id="storyText" class="font-magic text-4xl text-yellow-300 leading-tight"></h2>
+        </div>
+        
+        <div id="actions" class="mt-8 opacity-0 pointer-events-none transition-opacity duration-700 flex flex-col items-center gap-6">
+            <button id="yesBtn" class="font-royal uppercase tracking-widest">I DO!</button>
+            <button id="noBtn" class="text-white/30 text-xs uppercase tracking-widest hover:text-white">Refuse</button>
+        </div>
+    </div>
+
+    <div id="finalStage" class="hidden fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center text-center">
+        <h1 class="font-magic text-8xl text-purple-900 animate-bounce">HEHEHE! ✨</h1>
+        <p class="font-royal text-xl text-purple-700 mt-4 tracking-widest">The Kingdom Rejoices</p>
+        <p class="font-magic text-5xl text-purple-800 mt-6">Wittul Guggu Loves You Always</p>
+        <div class="mt-8 text-5xl">👑 🏮 👑</div>
+    </div>
+
+    <script>
+        const bgMusic = document.getElementById('bgMusic');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const sunBg = document.getElementById('sunBg');
+        const storyText = document.getElementById('storyText');
+        const actions = document.getElementById('actions');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const finalStage = document.getElementById('finalStage');
+
+        step1.onclick = function() {
+            bgMusic.play().catch(e => console.log("Sound enabled"));
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            sunBg.style.opacity = '0.4';
+            typeText();
+        };
+
+        const msg = "Will you be the Valentine of your wittul guggu? 🥺";
+        let i = 0;
+        function typeText() {
+            if (i < msg.length) {
+                storyText.innerHTML += msg.charAt(i);
+                i++;
+                setTimeout(typeText, 50);
+            } else {
+                actions.style.opacity = '1';
+                actions.style.pointerEvents = 'auto';
+                startGrowing();
+            }
+        }
+
+        let scale = 1;
+        let success = false;
+        function startGrowing() {
+            const growInterval = setInterval(() => {
+                if(!success) {
+                    scale += 0.045; // FASTEST SPEED
+                    yesBtn.style.transform = `scale(${scale})`;
+                    noBtn.style.opacity = Math.max(0, 1 - (scale - 1) * 6);
+                } else clearInterval(growInterval);
+            }, 50);
+        }
+
+        noBtn.onmouseover = () => {
+            if(success) return;
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = Math.random() * 80 + '%';
+            noBtn.style.top = Math.random() * 80 + '%';
+        };
+
+        yesBtn.onclick = () => {
+            success = true;
+            yesBtn.style.transition = "transform 0.8s ease-in";
+            yesBtn.style.transform = "scale(500)";
+            setTimeout(() => {
+                finalStage.classList.remove('hidden');
+                finalStage.classList.add('flex');
+                setInterval(bombard, 70);
+            }, 700);
+        };
+
+        function bombard() {
+            const b = document.createElement('div');
+            b.className = 'love-bomb';
+            b.innerHTML = "I LOVE YOU";
+            b.style.left = Math.random() * 100 + 'vw';
+            b.style.top = Math.random() * 100 + 'vh';
+            b.style.color = ['#ff0080', '#ffd700', '#2e2a36'][Math.floor(Math.random()*3)];
+            b.style.fontSize = (Math.random() * 40 + 20) + 'px';
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), 900);
+        }
+    </script>
+</body>
+</html>
