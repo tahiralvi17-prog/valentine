@@ -11,7 +11,6 @@
         :root {
             --gold: #ffd700;
             --deep-purple: #2e1047;
-            --royal-glow: rgba(255, 215, 0, 0.4);
         }
 
         body {
@@ -20,115 +19,87 @@
             font-family: 'Quicksand', sans-serif;
             overflow: hidden;
             height: 100vh;
-            cursor: crosshair;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .font-royal { font-family: 'Cinzel', serif; }
         .font-magic { font-family: 'Dancing Script', cursive; }
 
-        /* Magic Sparkle Trail */
         .sparkle {
             position: absolute;
-            width: 6px; height: 6px;
+            width: 5px; height: 5px;
             background: var(--gold);
             border-radius: 50%;
             pointer-events: none;
             box-shadow: 0 0 10px var(--gold);
             animation: sparkleAnim 1s linear forwards;
+            z-index: 999;
         }
         @keyframes sparkleAnim {
             0% { transform: scale(1) translateY(0); opacity: 1; }
             100% { transform: scale(0) translateY(30px); opacity: 0; }
         }
 
-        /* The Sun Background */
         .sun-bg {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90vh; height: 90vh;
+            width: 85vh; height: 85vh;
             background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sun_symbol_of_the_Kingdom_of_Corona.svg/1024px-Sun_symbol_of_the_Kingdom_of_Corona.svg.png') no-repeat center;
             background-size: contain;
             opacity: 0;
             z-index: 0;
-            transition: all 5s ease;
+            transition: opacity 3s ease, transform 10s linear;
         }
 
-        /* Glass Card */
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
             display: none;
             opacity: 0;
-            transition: all 1s ease;
+            transition: opacity 1s ease;
+            z-index: 50;
         }
 
-        /* Lantern Animation */
         .lantern {
             position: fixed; bottom: -100px;
-            filter: drop-shadow(0 0 20px var(--gold));
-            animation: rise linear forwards;
+            filter: drop-shadow(0 0 15px var(--gold));
             z-index: 10;
+            animation: rise linear forwards;
         }
-        @keyframes rise {
-            to { transform: translateY(-130vh) translateX(100px); opacity: 0; }
-        }
+        @keyframes rise { to { transform: translateY(-130vh) translateX(100px); opacity: 0; } }
 
-        /* Yes Button Pulse */
         #yesBtn {
-            background: linear-gradient(135deg, #ffd700, #b8860b);
+            background: linear-gradient(135deg, #ffd700, #daa520);
             color: #2e1047;
-            box-shadow: 0 0 30px var(--royal-glow);
-            transition: transform 0.2s;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
         }
 
-        /* Success Overlay */
         #celebration {
             position: fixed; inset: 0; background: #fff;
             display: none; z-index: 1000;
-            flex-direction: column; items-center; justify-content: center;
+            flex-direction: column; align-items: center; justify-content: center;
         }
     </style>
 </head>
-<body class="flex items-center justify-center">
+<body>
 
     <div class="sun-bg" id="sunBg"></div>
 
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop preload="auto">
         <source src="https://www.chosic.com/wp-content/uploads/2021/07/The-Grand-Adventure.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="step1" class="text-center z-50">
-        <div id="mainLantern" class="text-[120px] cursor-pointer animate-bounce transition-all hover:scale-110 active:scale-95 drop-shadow-[0_0_40px_rgba(255,215,0,0.8)]">🏮</div>
-        <p class="font-royal text-yellow-200 mt-8 tracking-[0.4em] text-sm animate-pulse">Touch the Light</p>
+    <div id="step1" class="text-center z-50 transition-opacity duration-1000">
+        <div id="mainLantern" class="text-[120px] cursor-pointer animate-bounce hover:scale-110 active:scale-95 transition-transform duration-300">🏮</div>
+        <p class="font-royal text-yellow-200 mt-6 tracking-[0.4em] text-sm animate-pulse uppercase">Touch the Light</p>
     </div>
 
-    <div id="step2" class="glass-card p-12 rounded-[60px] max-w-xl w-full mx-4 z-50 text-center border-t-4 border-yellow-500/30">
-        <div class="mb-6">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" class="w-24 mx-auto drop-shadow-lg">
-        </div>
-        
-        <h2 id="storyText" class="font-magic text-4xl text-yellow-300 leading-relaxed min-h-[120px]"></h2>
-        
-        <div id="actionArea" class="mt-12 opacity-0 transition-opacity duration-1000 flex flex-col items-center gap-6">
-            <button id="yesBtn" class="font-royal font-bold py-6 px-16 rounded-full text-2xl uppercase tracking-widest transform">
-                I Do!
-            </button>
-            <button id="noBtn" class="text-white/30 text-xs uppercase tracking-tighter hover:text-white transition-all">
-                I shall refuse (Impossible)
-            </button>
-        </div>
-    </div>
-
-    <div id="celebration" class="text-center">
-        <h1 class="font-magic text-8xl text-purple-900 mb-4 animate-bounce">YES! ✨</h1>
-        <p class="font-royal text-purple-700 text-xl tracking-[0.5em]">The Kingdom Rejoices</p>
-        <p class="font-magic text-4xl text-purple-800 mt-8 italic">Wittul Guggu Loves You Always</p>
-        <div class="mt-12 text-5xl">👑 🌸 🏮 🌸 👑</div>
-    </div>
-
-    <script>
-        const step1 = document.getElementById('step1');
-        const step2 = document
+    <div id="step2" class="glass-card p-10 rounded-[50px] max-w-lg w-full mx-4 text-center">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" class="w-24 mx-auto mb-6 drop-shadow-lg">
+        <h2 id="storyText" class="font-magic text-4xl text-yellow-300 min-h-[140px] leading-relaxed">
