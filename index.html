@@ -8,11 +8,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cinzel:wght@400;700&family=Quicksand:wght@300;500&display=swap');
 
-        :root {
-            --gold: #ffd700;
-            --deep-purple: #2e1047;
-        }
-
         body {
             background: #0d0216;
             color: white;
@@ -28,20 +23,14 @@
         .font-royal { font-family: 'Cinzel', serif; }
         .font-magic { font-family: 'Dancing Script', cursive; }
 
-        .sparkle {
-            position: absolute;
-            width: 5px; height: 5px;
-            background: var(--gold);
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 0 0 10px var(--gold);
-            animation: sparkleAnim 1s linear forwards;
-            z-index: 999;
+        /* Use your actual image for the lantern button */
+        #mainLantern {
+            width: 150px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 20px #ffd700);
+            transition: all 0.3s ease;
         }
-        @keyframes sparkleAnim {
-            0% { transform: scale(1) translateY(0); opacity: 1; }
-            100% { transform: scale(0) translateY(30px); opacity: 0; }
-        }
+        #mainLantern:hover { transform: scale(1.1); filter: drop-shadow(0 0 40px #ffd700); }
 
         .sun-bg {
             position: fixed;
@@ -52,27 +41,18 @@
             background-size: contain;
             opacity: 0;
             z-index: 0;
-            transition: opacity 3s ease, transform 10s linear;
+            transition: opacity 3s ease;
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
             display: none;
             opacity: 0;
-            transition: opacity 1s ease;
             z-index: 50;
+            transition: opacity 1s ease;
         }
-
-        .lantern {
-            position: fixed; bottom: -100px;
-            filter: drop-shadow(0 0 15px var(--gold));
-            z-index: 10;
-            animation: rise linear forwards;
-        }
-        @keyframes rise { to { transform: translateY(-130vh) translateX(100px); opacity: 0; } }
 
         #yesBtn {
             background: linear-gradient(135deg, #ffd700, #daa520);
@@ -85,21 +65,150 @@
             display: none; z-index: 1000;
             flex-direction: column; align-items: center; justify-content: center;
         }
+
+        .sparkle {
+            position: absolute; width: 4px; height: 4px; background: #ffd700;
+            border-radius: 50%; pointer-events: none; animation: spark 1s linear forwards;
+        }
+        @keyframes spark { to { transform: translateY(30px); opacity: 0; } }
     </style>
 </head>
 <body>
 
     <div class="sun-bg" id="sunBg"></div>
 
-    <audio id="bgMusic" loop preload="auto">
+    <audio id="bgMusic" loop>
         <source src="https://www.chosic.com/wp-content/uploads/2021/07/The-Grand-Adventure.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="step1" class="text-center z-50 transition-opacity duration-1000">
-        <div id="mainLantern" class="text-[120px] cursor-pointer animate-bounce hover:scale-110 active:scale-95 transition-transform duration-300">🏮</div>
-        <p class="font-royal text-yellow-200 mt-6 tracking-[0.4em] text-sm animate-pulse uppercase">Touch the Light</p>
+    <div id="step1" class="text-center z-50">
+        <img id="mainLantern" src="https://i.postimg.cc/9F2Yp3kP/lantern-image.png" alt="Lantern" class="mx-auto mb-10 animate-bounce">
+        <p class="font-royal text-yellow-200 tracking-[0.4em] text-lg animate-pulse uppercase">Touch the Light</p>
     </div>
 
     <div id="step2" class="glass-card p-10 rounded-[50px] max-w-lg w-full mx-4 text-center">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" class="w-24 mx-auto mb-6 drop-shadow-lg">
-        <h2 id="storyText" class="font-magic text-4xl text-yellow-300 min-h-[140px] leading-relaxed">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" class="w-24 mx-auto mb-6">
+        <h2 id="storyText" class="font-magic text-4xl text-yellow-300 min-h-[140px] leading-relaxed"></h2>
+        
+        <div id="actionArea" class="mt-10 opacity-0 flex flex-col items-center gap-6 transition-opacity duration-1000">
+            <button id="yesBtn" class="font-royal font-bold py-5 px-14 rounded-full text-xl uppercase tracking-widest">
+                I Do!
+            </button>
+            <button id="noBtn" class="text-white/40 text-[10px] uppercase tracking-widest">
+                I shall refuse (Impossible)
+            </button>
+        </div>
+    </div>
+
+    <div id="celebration">
+        <h1 class="font-magic text-7xl text-purple-900 mb-2 animate-bounce">YES! ✨</h1>
+        <p class="font-royal text-purple-700 tracking-[0.4em] text-sm mb-6">The Kingdom Rejoices</p>
+        <p class="font-magic text-4xl text-purple-800">Wittul Guggu Loves You Forever</p>
+        <div class="mt-10 text-4xl">👑 🌸 🏮 🌸 👑</div>
+    </div>
+
+    <script>
+        const mainLantern = document.getElementById('mainLantern');
+        const bgMusic = document.getElementById('bgMusic');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const sunBg = document.getElementById('sunBg');
+        const storyText = document.getElementById('storyText');
+        const actionArea = document.getElementById('actionArea');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const celebration = document.getElementById('celebration');
+
+        // Mouse sparkles
+        document.addEventListener('mousemove', (e) => {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = e.pageX + 'px'; s.style.top = e.pageY + 'px';
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 1000);
+        });
+
+        // FIXED: The click listener is now much more robust
+        mainLantern.onclick = function() {
+            console.log("Lantern clicked!"); // Debug
+            
+            // Try to play music
+            bgMusic.play().catch(e => console.log("Audio failed to play:", e));
+            
+            // Hide Step 1
+            step1.style.opacity = '0';
+            
+            setTimeout(() => {
+                step1.style.display = 'none';
+                step2.style.display = 'block';
+                setTimeout(() => {
+                    step2.style.opacity = '1';
+                    typeStory();
+                }, 100);
+                sunBg.style.opacity = '0.15';
+                document.body.style.background = '#1a0b2e';
+            }, 800);
+        };
+
+        const lines = [
+            "In a kingdom far away...",
+            "Wittul Guggu found a treasure.",
+            "That treasure was you.",
+            "Will you be my Valentine? 🥺"
+        ];
+        
+        let lineIdx = 0, charIdx = 0;
+        function typeStory() {
+            if (lineIdx < lines.length) {
+                if (charIdx < lines[lineIdx].length) {
+                    storyText.innerHTML += lines[lineIdx].charAt(charIdx);
+                    charIdx++;
+                    setTimeout(typeStory, 50);
+                } else {
+                    setTimeout(() => {
+                        if (lineIdx < lines.length - 1) {
+                            storyText.innerHTML = "";
+                            charIdx = 0;
+                            lineIdx++;
+                            typeStory();
+                        } else {
+                            actionArea.style.opacity = '1';
+                            actionArea.style.pointerEvents = 'auto';
+                            startGrowing();
+                        }
+                    }, 1500);
+                }
+            }
+        }
+
+        let scale = 1, success = false;
+        function startGrowing() {
+            setInterval(() => {
+                if (!success) {
+                    scale += 0.005;
+                    yesBtn.style.transform = `scale(${scale})`;
+                    noBtn.style.opacity = Math.max(0, 1 - (scale - 1) * 3);
+                }
+            }, 100);
+        }
+
+        noBtn.onmouseover = () => {
+            if (success) return;
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = Math.random() * 80 + '%';
+            noBtn.style.top = Math.random() * 80 + '%';
+        };
+
+        yesBtn.onclick = () => {
+            success = true;
+            yesBtn.style.transition = "transform 1.5s cubic-bezier(0.9, 0, 0.1, 1)";
+            yesBtn.style.transform = "scale(250)";
+            setTimeout(() => {
+                celebration.style.display = 'flex';
+                document.body.style.background = '#ffd700';
+                sunBg.style.opacity = '0.8';
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
