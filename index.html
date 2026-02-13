@@ -3,29 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Message for You... ✨</title>
+    <title>A Royal Invitation ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cinzel:wght@400;700&family=Quicksand:wght@300;500&display=swap');
+
+        :root {
+            --gold: #ffd700;
+            --deep-purple: #2e1047;
+            --royal-glow: rgba(255, 215, 0, 0.4);
+        }
 
         body {
-            background: #1a0b2e;
-            overflow: hidden;
+            background: #0d0216;
             color: white;
             font-family: 'Quicksand', sans-serif;
-            transition: background 2s ease;
-            cursor: url('https://cur.cursors-4u.net/symbols/sym-1/sym46.cur'), auto;
+            overflow: hidden;
+            height: 100vh;
+            cursor: crosshair;
         }
 
+        .font-royal { font-family: 'Cinzel', serif; }
         .font-magic { font-family: 'Dancing Script', cursive; }
 
-        #gatekeeper {
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 0 20px #ffd700);
+        /* Magic Sparkle Trail */
+        .sparkle {
+            position: absolute;
+            width: 6px; height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--gold);
+            animation: sparkleAnim 1s linear forwards;
         }
-        #gatekeeper:hover { transform: scale(1.2) rotate(10deg); }
+        @keyframes sparkleAnim {
+            0% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(0) translateY(30px); opacity: 0; }
+        }
 
+        /* The Sun Background */
         .sun-bg {
             position: fixed;
             top: 50%; left: 50%;
@@ -35,220 +51,84 @@
             background-size: contain;
             opacity: 0;
             z-index: 0;
-            transition: opacity 3s ease, transform 20s linear;
+            transition: all 5s ease;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.05);
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(25px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            z-index: 50;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
             display: none;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: all 1s ease;
         }
 
-        .love-bomb {
-            position: fixed;
-            z-index: 1000;
-            font-weight: 900;
-            pointer-events: none;
-            font-family: 'Dancing Script', cursive;
-            animation: explode 1s ease-out forwards;
-        }
-
-        @keyframes explode {
-            0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: scale(3) rotate(20deg); opacity: 0; }
-        }
-
+        /* Lantern Animation */
         .lantern {
-            position: fixed; bottom: -10%; font-size: 35px;
-            filter: drop-shadow(0 0 15px #ffd700); z-index: 1;
+            position: fixed; bottom: -100px;
+            filter: drop-shadow(0 0 20px var(--gold));
             animation: rise linear forwards;
+            z-index: 10;
+        }
+        @keyframes rise {
+            to { transform: translateY(-130vh) translateX(100px); opacity: 0; }
         }
 
-        @keyframes rise { 
-            0% { transform: translateY(0) translateX(0); }
-            100% { transform: translateY(-120vh) translateX(100px); opacity: 0; } 
+        /* Yes Button Pulse */
+        #yesBtn {
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #2e1047;
+            box-shadow: 0 0 30px var(--royal-glow);
+            transition: transform 0.2s;
         }
 
-        /* Floating Music Button */
-        #musicControl {
-            position: fixed;
-            top: 20px; right: 20px;
-            z-index: 1001;
-            background: rgba(255, 215, 0, 0.2);
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 1px solid #ffd700;
+        /* Success Overlay */
+        #celebration {
+            position: fixed; inset: 0; background: #fff;
+            display: none; z-index: 1000;
+            flex-direction: column; items-center; justify-content: center;
         }
     </style>
 </head>
-<body class="h-screen flex items-center justify-center">
+<body class="flex items-center justify-center">
 
     <div class="sun-bg" id="sunBg"></div>
 
-    <div id="musicControl" onclick="toggleMusic()">🔇</div>
     <audio id="bgMusic" loop>
         <source src="https://www.chosic.com/wp-content/uploads/2021/07/The-Grand-Adventure.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="suspenseLayer" class="text-center z-[100]">
-        <div id="gatekeeper" class="text-9xl mb-6 animate-bounce">🏮</div>
-        <h2 class="text-yellow-200 text-2xl font-magic">Wittul Guggu sent you a secret...</h2>
-        <p class="text-yellow-500/80 mt-2 tracking-widest uppercase text-xs">Click the lantern to reveal</p>
+    <div id="step1" class="text-center z-50">
+        <div id="mainLantern" class="text-[120px] cursor-pointer animate-bounce transition-all hover:scale-110 active:scale-95 drop-shadow-[0_0_40px_rgba(255,215,0,0.8)]">🏮</div>
+        <p class="font-royal text-yellow-200 mt-8 tracking-[0.4em] text-sm animate-pulse">Touch the Light</p>
     </div>
 
-    <div id="card" class="card p-12 rounded-[40px] text-center max-w-lg w-full mx-4 relative overflow-hidden">
-        <div id="media" class="mb-6">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" alt="Pascal" class="w-28 mx-auto drop-shadow-lg">
+    <div id="step2" class="glass-card p-12 rounded-[60px] max-w-xl w-full mx-4 z-50 text-center border-t-4 border-yellow-500/30">
+        <div class="mb-6">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" class="w-24 mx-auto drop-shadow-lg">
         </div>
-
-        <h1 id="typedQuestion" class="text-4xl font-bold text-yellow-300 font-magic mb-4 leading-tight"></h1>
-        <p id="pweese" class="text-yellow-100/70 text-lg mb-10 italic opacity-0 transition-all duration-1000">Yes, pweeeese... I'm waiting! 🥺</p>
-
-        <div class="flex justify-center items-center gap-8 relative min-h-[200px]">
-            <button id="yesBtn" class="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-purple-900 font-black py-5 px-14 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.5)] z-[100] transition-transform duration-200">
-                YES!
+        
+        <h2 id="storyText" class="font-magic text-4xl text-yellow-300 leading-relaxed min-h-[120px]"></h2>
+        
+        <div id="actionArea" class="mt-12 opacity-0 transition-opacity duration-1000 flex flex-col items-center gap-6">
+            <button id="yesBtn" class="font-royal font-bold py-6 px-16 rounded-full text-2xl uppercase tracking-widest transform">
+                I Do!
             </button>
-            <button id="noBtn" class="bg-white/10 hover:bg-white/20 text-white/50 font-bold py-2 px-8 rounded-full absolute transition-all duration-100 z-[90] border border-white/10">
-                No
+            <button id="noBtn" class="text-white/30 text-xs uppercase tracking-tighter hover:text-white transition-all">
+                I shall refuse (Impossible)
             </button>
         </div>
+    </div>
+
+    <div id="celebration" class="text-center">
+        <h1 class="font-magic text-8xl text-purple-900 mb-4 animate-bounce">YES! ✨</h1>
+        <p class="font-royal text-purple-700 text-xl tracking-[0.5em]">The Kingdom Rejoices</p>
+        <p class="font-magic text-4xl text-purple-800 mt-8 italic">Wittul Guggu Loves You Always</p>
+        <div class="mt-12 text-5xl">👑 🌸 🏮 🌸 👑</div>
     </div>
 
     <script>
-        const gatekeeper = document.getElementById('gatekeeper');
-        const suspenseLayer = document.getElementById('suspenseLayer');
-        const card = document.getElementById('card');
-        const sunBg = document.getElementById('sunBg');
-        const yesBtn = document.getElementById('yesBtn');
-        const noBtn = document.getElementById('noBtn');
-        const pweese = document.getElementById('pweese');
-        const bgMusic = document.getElementById('bgMusic');
-        const musicControl = document.getElementById('musicControl');
-
-        let isMusicPlaying = false;
-
-        function toggleMusic() {
-            if (isMusicPlaying) {
-                bgMusic.pause();
-                musicControl.innerText = "🔇";
-            } else {
-                bgMusic.play();
-                musicControl.innerText = "🔊";
-            }
-            isMusicPlaying = !isMusicPlaying;
-        }
-
-        gatekeeper.addEventListener('click', () => {
-            // Start music on first interaction
-            bgMusic.play();
-            isMusicPlaying = true;
-            musicControl.innerText = "🔊";
-
-            suspenseLayer.classList.add('opacity-0');
-            setTimeout(() => {
-                suspenseLayer.style.display = 'none';
-                card.style.display = 'block';
-                sunBg.style.opacity = '0.15';
-                document.body.style.background = 'radial-gradient(circle at center, #2e1047, #1a0b2e)';
-                typeWriter();
-            }, 500);
-        });
-
-        const text = "Will you be the Valentine of your wittul guggu? 🥺";
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                document.getElementById("typedQuestion").innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            } else {
-                pweese.style.opacity = '1';
-                pweese.classList.add('translate-y-[-10px]');
-                startGrowing();
-            }
-        }
-
-        let currentScale = 1;
-        let isSuccess = false;
-
-        function startGrowing() {
-            const growInterval = setInterval(() => {
-                if(!isSuccess) {
-                    currentScale += 0.005;
-                    yesBtn.style.transform = `scale(${currentScale})`;
-                } else {
-                    clearInterval(growInterval);
-                }
-            }, 100);
-        }
-
-        const moveButton = () => {
-            if(isSuccess) return;
-            const maxX = window.innerWidth - noBtn.offsetWidth;
-            const maxY = window.innerHeight - noBtn.offsetHeight;
-            noBtn.style.left = Math.random() * maxX + 'px';
-            noBtn.style.top = Math.random() * maxY + 'px';
-            noBtn.style.position = 'fixed';
-            // Make "No" button fade away as Yes grows
-            noBtn.style.opacity = 1 / currentScale;
-        };
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('click', moveButton); // Just in case they are fast!
-
-        yesBtn.addEventListener('click', () => {
-            isSuccess = true;
-            noBtn.style.display = 'none';
-            
-            // Dramatic transition
-            yesBtn.style.transition = "all 1s cubic-bezier(0.95, 0.05, 0.795, 0.035)";
-            yesBtn.style.transform = "scale(200)";
-            yesBtn.style.opacity = "0";
-            
-            setTimeout(() => {
-                card.innerHTML = `
-                    <div class="relative z-[110]">
-                        <h1 class="text-7xl font-black text-purple-900 font-magic animate-bounce">HEHEHE!</h1>
-                        <p class="text-3xl mt-6 text-purple-800 font-bold italic">Wittul Guggu Loves You Forever!!</p>
-                        <div class="mt-8 text-5xl">👑✨🌷</div>
-                    </div>
-                `;
-                card.style.background = "white";
-                card.style.border = "none";
-                document.body.style.background = "#FFD700";
-                sunBg.style.opacity = "1";
-                sunBg.style.transform = "translate(-50%, -50%) rotate(360deg)";
-            }, 700);
-
-            setInterval(bombardWithLove, 80);
-            setInterval(createLantern, 250);
-        });
-
-        function bombardWithLove() {
-            const love = document.createElement('div');
-            love.innerHTML = ["I LOVE YOU", "MINE", "FOREVER", "❤️"][Math.floor(Math.random() * 4)];
-            love.className = 'love-bomb font-magic';
-            love.style.left = Math.random() * 100 + 'vw';
-            love.style.top = Math.random() * 100 + 'vh';
-            love.style.color = ['#d4af37', '#db2777', '#7c3aed', '#be123c'][Math.floor(Math.random() * 4)];
-            love.style.fontSize = (Math.random() * 40 + 20) + 'px';
-            document.body.appendChild(love);
-            setTimeout(() => love.remove(), 1000);
-        }
-
-        function createLantern() {
-            const lantern = document.createElement('div');
-            lantern.innerHTML = '🏮';
-            lantern.className = 'lantern';
-            lantern.style.left = Math.random() * 100 + 'vw';
-            lantern.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            document.body.appendChild(lantern);
-            setTimeout(() => lantern.remove(), 6000);
-        }
-    </script>
-</body>
-</html>
+        const step1 = document.getElementById('step1');
+        const step2 = document
