@@ -3,74 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Royal Invitation ✨</title>
+    <title>A Secret... ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cinzel:wght@400;700&family=Quicksand:wght@300;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cinzel:wght@400;700&display=swap');
 
         body {
-            background: #0d0216;
+            background-color: #2e2a36; /* Your Ash Purple */
             color: white;
-            font-family: 'Quicksand', sans-serif;
-            overflow: hidden;
-            height: 100vh;
             margin: 0;
+            height: 100vh;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation;
         }
 
         .font-royal { font-family: 'Cinzel', serif; }
         .font-magic { font-family: 'Dancing Script', cursive; }
 
-        /* Use your actual image for the lantern button */
-        #mainLantern {
-            width: 150px;
-            cursor: pointer;
-            filter: drop-shadow(0 0 20px #ffd700);
-            transition: all 0.3s ease;
-        }
-        #mainLantern:hover { transform: scale(1.1); filter: drop-shadow(0 0 40px #ffd700); }
-
         .sun-bg {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 85vh; height: 85vh;
+            width: 75vh; height: 75vh;
             background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sun_symbol_of_the_Kingdom_of_Corona.svg/1024px-Sun_symbol_of_the_Kingdom_of_Corona.svg.png') no-repeat center;
             background-size: contain;
             opacity: 0;
             z-index: 0;
-            transition: opacity 3s ease;
+            pointer-events: none;
+            transition: opacity 2s ease;
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(46, 42, 54, 0.85);
+            backdrop-filter: blur(15px);
+            border: 2px solid #ffd700;
+            border-radius: 40px;
+            padding: 2.5rem;
+            z-index: 10;
             display: none;
-            opacity: 0;
-            z-index: 50;
-            transition: opacity 1s ease;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.6);
         }
 
         #yesBtn {
-            background: linear-gradient(135deg, #ffd700, #daa520);
-            color: #2e1047;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(to bottom, #ffd700, #b8860b);
+            color: #2e2a36;
+            font-weight: 900;
+            border-radius: 50px;
+            padding: 1.2rem 3.5rem;
+            font-size: 1.8rem;
+            z-index: 100;
+            transition: transform 0.05s linear; /* ULTRA FAST GROWTH */
         }
 
-        #celebration {
-            position: fixed; inset: 0; background: #fff;
-            display: none; z-index: 1000;
-            flex-direction: column; align-items: center; justify-content: center;
+        .love-bomb {
+            position: fixed;
+            font-family: 'Dancing Script', cursive;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 9999;
+            animation: blowup 0.9s ease-out forwards;
         }
 
-        .sparkle {
-            position: absolute; width: 4px; height: 4px; background: #ffd700;
-            border-radius: 50%; pointer-events: none; animation: spark 1s linear forwards;
+        @keyframes blowup {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(4) rotate(20deg); opacity: 0; }
         }
-        @keyframes spark { to { transform: translateY(30px); opacity: 0; } }
+
+        #mainLantern {
+            width: 160px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 30px #ffd700);
+        }
     </style>
 </head>
 <body>
@@ -78,137 +88,13 @@
     <div class="sun-bg" id="sunBg"></div>
 
     <audio id="bgMusic" loop>
-        <source src="https://www.chosic.com/wp-content/uploads/2021/07/The-Grand-Adventure.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
 
     <div id="step1" class="text-center z-50">
-        <img id="mainLantern" src="https://i.postimg.cc/9F2Yp3kP/lantern-image.png" alt="Lantern" class="mx-auto mb-10 animate-bounce">
-        <p class="font-royal text-yellow-200 tracking-[0.4em] text-lg animate-pulse uppercase">Touch the Light</p>
+        <img id="mainLantern" src="https://i.postimg.cc/9F2Yp3kP/lantern-image.png" class="mx-auto animate-bounce mb-8">
+        <p class="font-royal text-yellow-200 tracking-[0.5em] text-lg animate-pulse">TOUCH THE LIGHT</p>
     </div>
 
-    <div id="step2" class="glass-card p-10 rounded-[50px] max-w-lg w-full mx-4 text-center">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3NueXp1bmZqZzR3eHh3eHh3eHh3eHh3eHh3eHh3eHh3eHh3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/5XvKOnfI6748w9o4Yp/giphy.gif" class="w-24 mx-auto mb-6">
-        <h2 id="storyText" class="font-magic text-4xl text-yellow-300 min-h-[140px] leading-relaxed"></h2>
-        
-        <div id="actionArea" class="mt-10 opacity-0 flex flex-col items-center gap-6 transition-opacity duration-1000">
-            <button id="yesBtn" class="font-royal font-bold py-5 px-14 rounded-full text-xl uppercase tracking-widest">
-                I Do!
-            </button>
-            <button id="noBtn" class="text-white/40 text-[10px] uppercase tracking-widest">
-                I shall refuse (Impossible)
-            </button>
-        </div>
-    </div>
-
-    <div id="celebration">
-        <h1 class="font-magic text-7xl text-purple-900 mb-2 animate-bounce">YES! ✨</h1>
-        <p class="font-royal text-purple-700 tracking-[0.4em] text-sm mb-6">The Kingdom Rejoices</p>
-        <p class="font-magic text-4xl text-purple-800">Wittul Guggu Loves You Forever</p>
-        <div class="mt-10 text-4xl">👑 🌸 🏮 🌸 👑</div>
-    </div>
-
-    <script>
-        const mainLantern = document.getElementById('mainLantern');
-        const bgMusic = document.getElementById('bgMusic');
-        const step1 = document.getElementById('step1');
-        const step2 = document.getElementById('step2');
-        const sunBg = document.getElementById('sunBg');
-        const storyText = document.getElementById('storyText');
-        const actionArea = document.getElementById('actionArea');
-        const yesBtn = document.getElementById('yesBtn');
-        const noBtn = document.getElementById('noBtn');
-        const celebration = document.getElementById('celebration');
-
-        // Mouse sparkles
-        document.addEventListener('mousemove', (e) => {
-            const s = document.createElement('div');
-            s.className = 'sparkle';
-            s.style.left = e.pageX + 'px'; s.style.top = e.pageY + 'px';
-            document.body.appendChild(s);
-            setTimeout(() => s.remove(), 1000);
-        });
-
-        // FIXED: The click listener is now much more robust
-        mainLantern.onclick = function() {
-            console.log("Lantern clicked!"); // Debug
-            
-            // Try to play music
-            bgMusic.play().catch(e => console.log("Audio failed to play:", e));
-            
-            // Hide Step 1
-            step1.style.opacity = '0';
-            
-            setTimeout(() => {
-                step1.style.display = 'none';
-                step2.style.display = 'block';
-                setTimeout(() => {
-                    step2.style.opacity = '1';
-                    typeStory();
-                }, 100);
-                sunBg.style.opacity = '0.15';
-                document.body.style.background = '#1a0b2e';
-            }, 800);
-        };
-
-        const lines = [
-            "In a kingdom far away...",
-            "Wittul Guggu found a treasure.",
-            "That treasure was you.",
-            "Will you be my Valentine? 🥺"
-        ];
-        
-        let lineIdx = 0, charIdx = 0;
-        function typeStory() {
-            if (lineIdx < lines.length) {
-                if (charIdx < lines[lineIdx].length) {
-                    storyText.innerHTML += lines[lineIdx].charAt(charIdx);
-                    charIdx++;
-                    setTimeout(typeStory, 50);
-                } else {
-                    setTimeout(() => {
-                        if (lineIdx < lines.length - 1) {
-                            storyText.innerHTML = "";
-                            charIdx = 0;
-                            lineIdx++;
-                            typeStory();
-                        } else {
-                            actionArea.style.opacity = '1';
-                            actionArea.style.pointerEvents = 'auto';
-                            startGrowing();
-                        }
-                    }, 1500);
-                }
-            }
-        }
-
-        let scale = 1, success = false;
-        function startGrowing() {
-            setInterval(() => {
-                if (!success) {
-                    scale += 0.005;
-                    yesBtn.style.transform = `scale(${scale})`;
-                    noBtn.style.opacity = Math.max(0, 1 - (scale - 1) * 3);
-                }
-            }, 100);
-        }
-
-        noBtn.onmouseover = () => {
-            if (success) return;
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = Math.random() * 80 + '%';
-            noBtn.style.top = Math.random() * 80 + '%';
-        };
-
-        yesBtn.onclick = () => {
-            success = true;
-            yesBtn.style.transition = "transform 1.5s cubic-bezier(0.9, 0, 0.1, 1)";
-            yesBtn.style.transform = "scale(250)";
-            setTimeout(() => {
-                celebration.style.display = 'flex';
-                document.body.style.background = '#ffd700';
-                sunBg.style.opacity = '0.8';
-            }, 1000);
-        };
-    </script>
-</body>
-</html>
+    <div id="step2" class="glass-card">
+        <img src="
